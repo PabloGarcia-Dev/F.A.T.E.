@@ -1,4 +1,4 @@
-async function getFoodData(barcode){
+async function apiData(barcode){
     try
     {
         const foodresponse = await fetch(`https://world.openfoodfacts.org/api/v2/product/${barcode}.json`);
@@ -14,6 +14,8 @@ async function getFoodData(barcode){
         return {
             name: foodData.product.product_name || 'Unknown Product',
             ingredients: foodData.product.ingredients_text || 'No ingredients available',
+            imageUrl: foodData.product.image_front_url || 'No image available',
+            ecoScore: foodData.product.ecoscore_grade || 'unknown',
             allergens: foodData.product.allergens || 'No allergens available',
             nutrition: foodData.product.nutriments || 'No nutrition information available'
     };
