@@ -8,28 +8,54 @@ function getDaysLeft(expiryDate) {
   return Math.ceil((expiry - today) / 86400000);
 }
 
-/* Number of items in the pantry */
+/* Return the number of pantry items */
 function getTotalItems(items) {
   return items.length;
 }
 
-/* Number of expired items */
-function getExpiredCount(items) {
-  return items.filter((item) => {
-    return getDaysLeft(item.expiryDate) < 0;
-  }).length;
+/* Return an expiration category for styling */
+function getExpirationStatus(expiryDate) {
+  const daysLeft = getDaysLeft(expiryDate);
+
+  if (daysLeft < 0) {
+    return "expired";
+  }
+
+  if (daysLeft <= 2) {
+    return "critical";
+  }
+
+  if (daysLeft <= 5) {
+    return "warning";
+  }
+
+  if (daysLeft <= 10) {
+    return "attention";
+  }
+
+  return "fresh";
 }
 
-/* Number of items expiring within a specified number of days */
-function getExpiringSoonCount(items, numberOfDays = 3) {
-  return items.filter((item) => {
-    const daysLeft = getDaysLeft(item.expiryDate);
+/* Return readable expiration text */
+function getExpirationMessage(expiryDate) {
+  const daysLeft = getDaysLeft(expiryDate);
 
-    return daysLeft >= 0 && daysLeft <= numberOfDays;
-  }).length;
+  if (daysLeft < 0) {
+    return `Expired ${Math.abs(daysLeft)} days ago`;
+  }
+
+  if (daysLeft === 0) {
+    return "Expires today";
+  }
+
+  if (daysLeft === 1) {
+    return "Expires tomorrow";
+  }
+
+  return `${daysLeft} days left`;
 }
 
-/* Return items sorted by expiration date */
+/* Return items sorted from closest expiration to furthest */
 function getItemsSortedByExpiry(items) {
   return [...items].sort((firstItem, secondItem) => {
     return (
@@ -39,7 +65,23 @@ function getItemsSortedByExpiry(items) {
   });
 }
 
-/* Add a calculated daysLeft field to each returned item */
+/* Return the number of expired items */
+function getExpiredCount(items) {
+  return items.filter((item) => {
+    return getDaysLeft(item.expiryDate) < 0;
+  }).length;
+}
+
+/* Return the number of items expiring soon */
+function getExpiringSoonCount(items, numberOfDays = 3) {
+  return items.filter((item) => {
+    const daysLeft = getDaysLeft(item.expiryDate);
+
+    return daysLeft >= 0 && daysLeft <= numberOfDays;
+  }).length;
+}
+
+/* Return copies of the items with daysLeft added */
 function getItemsWithDaysLeft(items) {
   return items.map((item) => {
     return {
@@ -73,7 +115,7 @@ function getEcoScoreCounts(items) {
   return counts;
 }
 
-/* Return every metric in one object */
+/* Return dashboard metrics together */
 function getPantryMetrics(items) {
   return {
     totalItems: getTotalItems(items),
