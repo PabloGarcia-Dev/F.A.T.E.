@@ -1,3 +1,8 @@
+:root{
+    --main-color: rgba(107, 176, 36);
+    --secondary-color: rgba(22, 82, 40);
+    --tertiary-color: gold;
+}
 *{
     margin: 0;
     padding: 0;
@@ -16,7 +21,7 @@ html{
 }
 main{
     margin: 0 1rem; /* Reduced from 6rem to fit phone screens */
-    margin-bottom: 6rem;
+    margin-bottom: 12rem; /* Increased to prevent content from hiding behind the fixed footer */
 }
 body{
     height: fit-content;
@@ -24,7 +29,7 @@ body{
 }
 
 .header-container{ /*Container for the logo*/
-    background-color: rgba(107, 176, 36);
+    background-color: var(--main-color);
     display:flex;
     align-items: center;
     justify-content: center;
@@ -44,7 +49,7 @@ body{
 }
 #name-container{
     height: 7rem;
-    background-color: rgba(22, 82, 40);
+    background-color: var(--secondary-color);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -59,9 +64,150 @@ body{
     justify-content: center;
 }
 .section_divider hr{
-    border-top: .5rem double gold; /* Gives it color and thickness */
+    border-top: .5rem double var(--tertiary-color); /* Gives it color and thickness */
     width: 100%; /*Mmakes it look cleaner than edge-to-edge */
 }
 
+/*------------------------------------------------------ Bottom Nav & Footer Layout ------------------------------------------------------*/
+.footer-container{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 9rem;
+    background-color: var(--main-color); /* Changes background to the main brand green */
+    border-top: 1rem solid var(--secondary-color);
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: env(safe-area-inset-bottom);
+}
 
-/*------------------------------------------------------ Footer ------------------------------------------------------*/
+.bottom-nav{
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    justify-content: center; /* Centers the scan wrapper perfectly */
+    align-items: center;
+}
+
+/*------------------------------------------------------ Camera Scan Button ------------------------------------------------------*/
+.scan-button-wrapper{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: whitesmoke;
+    border: .2rem solid var(--tertiary-color);
+    border-radius: 50%;
+    height: 8rem;
+    width: 8rem;
+    margin-bottom: 9rem;
+}
+.scan-button-wrapper:hover{
+    transform: scale(1.05);
+}
+.green-bar{
+    height: 1rem;
+    background-color: red;
+}
+.scan-button-wrapper #start-scan-button{
+    font-size: 5.5rem; 
+}
+
+/* Interaction States */
+.scan-action-circle:active {
+    transform: scale(0.92);
+    background-color: #f7fafc;
+}
+
+.scan-label{
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: #ffffff; /* Flipped to white to stand out sharply against the green footer background */
+    margin-top: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05rem;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Gives it a slight readability pop */
+}
+
+/*------------------------------------------------------ Layout & App Containers ------------------------------------------------------*/
+#app-container {
+    max-width: 50rem;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+}
+
+.scanner-section {
+    margin-bottom: 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Style the target camera box wrapper */
+#scanner-reader {
+    width: 100%;
+    max-width: 350px;
+    background: #f0f0f0;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+}
+
+/*------------------------------------------------------ Pantry List Cards ------------------------------------------------------*/
+.section-title {
+    font-size: 2.2rem;
+    color: var(--secondary-color);
+}
+
+.pantry-placeholder {
+    font-size: 1.6rem;
+    color: #777;
+    text-align: center;
+    padding: 3rem 0;
+}
+
+.food-card{
+    display: flex;
+    align-items: center;
+    background: #fafafa;
+    border-left: 0.6rem solid var(--main-color);
+    padding: 1.2rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.food-card img{
+    width: 5rem;
+    height: 5rem;
+    object-fit: contain;
+    margin-right: 1.5rem;
+}
+
+.food-info{
+    flex-grow: 1;
+}
+
+.food-title{
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.food-expiry{
+    font-size: 1.3rem;
+    color: #666;
+    margin-top: 0.2rem;
+}
+
+.eco-badge{
+    background-color: var(--secondary-color);
+    color: white;
+    font-size: 1.1rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-weight: bold;
+}

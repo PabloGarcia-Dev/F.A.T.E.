@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="images/FATE_logo.png">
     <title>FATE - Expiration Date Tracker</title>
+    <script src="https://kit.fontawesome.com/58e49f57a0.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <header class="header-container">
@@ -24,9 +25,35 @@
         <hr>
     </div>
 
+    <main id="app-container">
+        <!-- SCANNER SECTION -->
+        <div class="scanner-section">
+            <!-- This is the target element where html5-qrcode will inject the camera video stream -->
+            <div id="scanner-reader"></div>
+        </div>
+
+        <!-- PANTRY DISPLAY SECTION -->
+        <div class="pantry-section">
+            <h2 class="section-title">Your Eco-Pantry</h2>
+            <div id="pantry-list">
+                <!-- Javascript will inject item cards dynamically here -->
+                <div class="pantry-placeholder">No items scanned yet. Ready to reduce waste?</div>
+            </div>
+        </div>
+    </main>
+
     <footer class="footer-container">
-        
+        <div class="bottom-nav">
+            <!-- Central Scan Button -->
+            <div class="scan-button-wrapper">
+                <i class="fa-solid fa-camera scan-action-button" id="start-scan-button" aria-label="Scan Barcode"></i>
+            </div>
+        </div>
     </footer>
-    
+
+    <!-- Include the HTML5-QRCode Scanner Library via CDN for speed -->
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <!-- Your main JavaScript file -->
+    <script src="app.js"></script>
 </body>
 </html>
