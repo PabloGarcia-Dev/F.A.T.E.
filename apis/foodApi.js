@@ -1,5 +1,6 @@
 async function getFoodData(barcode){
-    try{
+    try
+    {
         const foodresponse = await fetch(`https://world.openfoodfacts.org/api/v2/product/${barcode}.json`);
 
         const foodData = await foodresponse.json();
