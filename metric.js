@@ -1,5 +1,5 @@
 /* Calculate days remaining until expiration */
-function getDaysLeft(expiryDate) {
+export function getDaysLeft(expiryDate) {
   const today = new Date();
   const expiry = new Date(`${expiryDate}T00:00:00`);
 
@@ -9,12 +9,12 @@ function getDaysLeft(expiryDate) {
 }
 
 /* Return the number of pantry items */
-function getTotalItems(items) {
+export function getTotalItems(items) {
   return items.length;
 }
 
 /* Return an expiration category for styling */
-function getExpirationStatus(expiryDate) {
+export function getExpirationStatus(expiryDate) {
   const daysLeft = getDaysLeft(expiryDate);
 
   if (daysLeft < 0) {
@@ -37,7 +37,7 @@ function getExpirationStatus(expiryDate) {
 }
 
 /* Return readable expiration text */
-function getExpirationMessage(expiryDate) {
+export function getExpirationMessage(expiryDate) {
   const daysLeft = getDaysLeft(expiryDate);
 
   if (daysLeft < 0) {
@@ -56,7 +56,7 @@ function getExpirationMessage(expiryDate) {
 }
 
 /* Return items sorted from closest expiration to furthest */
-function getItemsSortedByExpiry(items) {
+export function getItemsSortedByExpiry(items) {
   return [...items].sort((firstItem, secondItem) => {
     return (
       new Date(firstItem.expiryDate) -
@@ -66,14 +66,14 @@ function getItemsSortedByExpiry(items) {
 }
 
 /* Return the number of expired items */
-function getExpiredCount(items) {
+export function getExpiredCount(items) {
   return items.filter((item) => {
     return getDaysLeft(item.expiryDate) < 0;
   }).length;
 }
 
 /* Return the number of items expiring soon */
-function getExpiringSoonCount(items, numberOfDays = 3) {
+export function getExpiringSoonCount(items, numberOfDays = 3) {
   return items.filter((item) => {
     const daysLeft = getDaysLeft(item.expiryDate);
 
@@ -82,7 +82,7 @@ function getExpiringSoonCount(items, numberOfDays = 3) {
 }
 
 /* Return copies of the items with daysLeft added */
-function getItemsWithDaysLeft(items) {
+export function getItemsWithDaysLeft(items) {
   return items.map((item) => {
     return {
       ...item,
@@ -92,7 +92,7 @@ function getItemsWithDaysLeft(items) {
 }
 
 /* Count items by Eco-Score */
-function getEcoScoreCounts(items) {
+export function getEcoScoreCounts(items) {
   const counts = {
     A: 0,
     B: 0,
@@ -116,7 +116,7 @@ function getEcoScoreCounts(items) {
 }
 
 /* Return dashboard metrics together */
-function getPantryMetrics(items) {
+export function getPantryMetrics(items) {
   return {
     totalItems: getTotalItems(items),
     expiredItems: getExpiredCount(items),

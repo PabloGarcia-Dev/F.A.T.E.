@@ -1,6 +1,5 @@
-
 // Function to fetch food data from Open Food Facts API based on barcode
-async function apiData(barcode){
+export async function apiData(barcode){
     try
     {
         // Fetch product data from Open Food Facts API

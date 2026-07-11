@@ -14,7 +14,7 @@
 let pantryItems =loadPantry();
 
 //Creates Object
-function createFoodItem(apiData, expiryDate){
+export function createFoodItem(apiData, expiryDate){
   return {
       id: apiData.id,   
       name: apiData.name,
@@ -24,35 +24,35 @@ function createFoodItem(apiData, expiryDate){
   };
 }
 
-function addFoodItem(foodItem) {
+export function addFoodItem(foodItem) {
   pantryItems.push(foodItem);
   savePantry();
 }
 
 //Uploads CURRENt pantry to local save
-function savePantry() {
+export function savePantry() {
   localStorage.setItem("pantryItems", JSON.stringify(pantryItems));
 }
 
 /* Load the pantry from the browser */
-function loadPantry() {
+export function loadPantry() {
   const savedPantry = localStorage.getItem("pantryItems");
 
   return savedPantry ? JSON.parse(savedPantry) : [];
 }
 
 /* Return every pantry item */
-function listFoodItems() {
+export function listFoodItems() {
   return pantryItems;
 }
 
 /* Find one item by its ID/barcode */
-function getFoodItem(id) {
+export function getFoodItem(id) {
   return pantryItems.find((item) => item.id === id);
 }
 
 /* Update an existing food item */
-function updateFoodItem(id, updatedData) {
+export function updateFoodItem(id, updatedData) {
   const item = getFoodItem(id);
 
   if (!item) {
@@ -66,7 +66,7 @@ function updateFoodItem(id, updatedData) {
 }
 
 /* Remove an item */
-function removeFoodItem(id) {
+export function removeFoodItem(id) {
   const originalLength = pantryItems.length;
 
   pantryItems = pantryItems.filter((item) => item.id !== id);
@@ -80,8 +80,7 @@ function removeFoodItem(id) {
 }
 
 /* Remove every pantry item */
-function clearPantry() {
+export function clearPantry() {
   pantryItems = [];
   savePantry();
 }
-
