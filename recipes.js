@@ -8,7 +8,7 @@ import { getExpirationStatus, getDaysLeft } from "./metric.js";
  
  * ---------------------------------------------------------------------
  */
-const RECIPE_API_ENDPOINT = "/api/gemini-recipes"; // Point this at the real serverless endpoint once it exists
+// const RECIPE_API_ENDPOINT = "/api/gemini-recipes"; Point this at the real serverless endpoint once it exists
 
 const SELECTORS = {
     toggleButton: "#recipe-panel-toggle",
