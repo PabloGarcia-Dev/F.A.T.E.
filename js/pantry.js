@@ -11,7 +11,7 @@
 
 
 //Array that will hold food OBJECTS
-let pantryItems =[];
+let pantryItems =loadPantry();
 
 //Creates Object
 function createFoodItem(apiData, expiryDate){
@@ -34,4 +34,54 @@ function savePantry() {
   localStorage.setItem("pantryItems", JSON.stringify(pantryItems));
 }
 
+/* Load the pantry from the browser */
+function loadPantry() {
+  const savedPantry = localStorage.getItem("pantryItems");
+
+  return savedPantry ? JSON.parse(savedPantry) : [];
+}
+
+/* Return every pantry item */
+function listFoodItems() {
+  return pantryItems;
+}
+
+/* Find one item by its ID/barcode */
+function getFoodItem(id) {
+  return pantryItems.find((item) => item.id === id);
+}
+
+/* Update an existing food item */
+function updateFoodItem(id, updatedData) {
+  const item = getFoodItem(id);
+
+  if (!item) {
+    return null;
+  }
+
+  Object.assign(item, updatedData);
+  savePantry();
+
+  return item;
+}
+
+/* Remove an item */
+function removeFoodItem(id) {
+  const originalLength = pantryItems.length;
+
+  pantryItems = pantryItems.filter((item) => item.id !== id);
+
+  if (pantryItems.length === originalLength) {
+    return false;
+  }
+
+  savePantry();
+  return true;
+}
+
+/* Remove every pantry item */
+function clearPantry() {
+  pantryItems = [];
+  savePantry();
+}
 
