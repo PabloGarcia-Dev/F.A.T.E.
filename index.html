@@ -99,5 +99,47 @@
         </p>
       </div>
     </div>
+
+    <!-- Edge-anchored trigger for the recipe suggestions panel -->
+    <button
+      id="recipe-panel-toggle"
+      class="recipe-panel-toggle"
+      type="button"
+      aria-label="Open recipe suggestions"
+      aria-expanded="false"
+      aria-controls="recipe-panel"
+    >
+        <i class="fa-solid fa-utensils"></i>
+        <span>Recipes</span>
+    </button>
+
+    <!-- Slide-in Recipe Suggestions Panel -->
+    <div
+      id="recipe-panel"
+      class="recipe-panel hidden"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="recipe-panel-title"
+      aria-hidden="true"
+    >
+        <div class="recipe-panel-header">
+            <h2 id="recipe-panel-title">Recipe Suggestions</h2>
+            <button id="close-recipe-panel-button" class="close-button" type="button" aria-label="Close recipe suggestions">
+                Close
+            </button>
+        </div>
+
+        <p class="recipe-panel-description">
+            Get recipe ideas built around what's expiring soon in your pantry, so nothing goes to waste.
+        </p>
+
+        <button id="generate-recipes-button" class="generate-recipes-button" type="button">
+            Get Recipe Ideas
+        </button>
+
+        <p id="recipe-status" class="recipe-status" aria-live="polite"></p>
+
+        <div id="recipe-results" class="recipe-results"></div>
+    </div>
 </body>
 </html>

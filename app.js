@@ -3,6 +3,7 @@ import { startScanner, stopScanner, submitManualBarcode } from "./scanner.js";
 import { apiData } from "./foodApi.js";
 import { getExpirationStatus, getExpirationMessage, getItemsSortedByExpiry } from "./metric.js";
 import { loadPantry, savePantry } from "./pantry.js";
+import { initRecipePanel } from "./recipes.js";
 
 const outputText = document.querySelector("#barcode-result");
 const pantryListContainer = document.querySelector("#pantry-list");
@@ -10,6 +11,7 @@ const pantryListContainer = document.querySelector("#pantry-list");
 // Initialize application visual array states on runtime spin up
 document.addEventListener("DOMContentLoaded", () => {
     renderPantryUI();
+    initRecipePanel();
 
     // Hook entry listeners to the floating footer actions
     document.querySelector("#start-scan-button").addEventListener("click", () => {
@@ -84,7 +86,7 @@ function renderPantryUI() {
     chronologicallySorted.forEach(item => {
         const cardElement = document.createElement('div');
         cardElement.className = 'food-card';
-        
+
         const statusUrgency = getExpirationStatus(item.expiryDate);
         const dynamicCountdownMsg = getExpirationMessage(item.expiryDate);
         const uppercaseEcoGrading = (item.ecoScore || 'unknown').toUpperCase();
@@ -163,9 +165,9 @@ function getDemoFallback(barcode) {
         "041500000251": { name: "Heinz Tomato Ketchup", ecoScore: "b", imageUrl: "https://images.openfoodfacts.org/images/products/004/150/000/0251/front_en.67.400.jpg", ingredients: "Tomato concentrate, distilled vinegar, high fructose corn syrup, salt, spice, onion powder, natural flavoring.", allergens: "None listed" },
         "078742371946": { name: "Organic Whole Milk", ecoScore: "c", imageUrl: "https://images.openfoodfacts.org/images/products/007/874/237/1946/front_en.45.400.jpg", ingredients: "Grade A organic whole milk, vitamin D3.", allergens: "Milk" }
     };
-    return PRESENTATION_CHEAT_SHEET[barcode] || { 
-        name: `Eco Item #${barcode.slice(-4)}`, 
-        ecoScore: "a", 
+    return PRESENTATION_CHEAT_SHEET[barcode] || {
+        name: `Eco Item #${barcode.slice(-4)}`,
+        ecoScore: "a",
         imageUrl: "https://placehold.co/100x100?text=Eco+Food",
         ingredients: "No ingredient data available for this demo item.",
         allergens: "No allergen data available for this demo item."
