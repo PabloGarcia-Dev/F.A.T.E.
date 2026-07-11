@@ -16,7 +16,7 @@ let pantryItems =loadPantry();
 //Creates Object
 function createFoodItem(apiData, expiryDate){
   return {
-    id: apiData.id,   
+      id: apiData.id,   
       name: apiData.name,
       imageUrl: apiData.imageUrl,
       ecoScore: apiData.ecoScore,
