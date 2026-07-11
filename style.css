@@ -149,13 +149,48 @@ input:focus {
 
 .food-card {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    position: relative;
     background: #ffffff;
     border-left: 0.6rem solid var(--main-color);
-    padding: 1.2rem;
+    padding: 1.2rem 3.2rem 1.2rem 1.2rem;
     border-radius: 8px;
     margin-bottom: 1.2rem;
     box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    cursor: pointer;
+}
+
+.food-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.delete-item-button {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.6rem;
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 50%;
+    background: #edf2ef;
+    color: #6b7f77;
+    font-size: 1.6rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.delete-item-button:hover {
+    background: #f6dede;
+    color: #a12b2b;
+}
+
+.food-card-summary {
+    display: flex;
+    align-items: center;
+    width: 100%;
 }
 
 .food-card img {
@@ -163,6 +198,40 @@ input:focus {
     height: 5rem;
     object-fit: contain;
     margin-right: 1.5rem;
+    flex-shrink: 0;
+    transition: width .2s ease-in-out, height .2s ease-in-out;
+}
+
+.food-card.expanded img {
+    width: 9rem;
+    height: 9rem;
+}
+
+.food-details {
+    display: none;
+    width: 100%;
+    margin-top: 1.2rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid #e4ede8;
+    font-size: 1.3rem;
+    line-height: 1.6;
+    color: #555;
+}
+
+.food-details p {
+    margin-bottom: 0.6rem;
+}
+
+.food-details p:last-child {
+    margin-bottom: 0;
+}
+
+.food-details strong {
+    color: var(--secondary-color);
+}
+
+.food-card.expanded .food-details {
+    display: block;
 }
 
 .food-info {

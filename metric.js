@@ -29,7 +29,7 @@ export function getExpirationStatus(expiryDate) {
     return "warning";
   }
 
-  if (daysLeft <= 10) {
+  if (daysLeft <= 7) {
     return "attention";
   }
 

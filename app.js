@@ -46,9 +46,12 @@ async function handleProcessedBarcode(barcode) {
     if (userSelectedExpiry) {
         const itemRecord = {
             id: 'item_' + Date.now() + '_' + barcode,
+            barcode: barcode,
             name: dataPayload.name,
             imageUrl: dataPayload.imageUrl,
             ecoScore: dataPayload.ecoScore,
+            ingredients: dataPayload.ingredients || 'No ingredient data available',
+            allergens: dataPayload.allergens || 'No allergen data available',
             expiryDate: userSelectedExpiry
         };
 
@@ -92,28 +95,70 @@ function renderPantryUI() {
         const dateBlocks = item.expiryDate.split('-');
         const visualFormattedDisplay = dateBlocks.length === 3 ? `${dateBlocks[1]}/${dateBlocks[2]}/${dateBlocks[0].slice(-2)}` : item.expiryDate;
 
+        const ingredientsText = escapeHtml(item.ingredients || 'No ingredient data available');
+        const allergensText = escapeHtml(item.allergens || 'No allergen data available');
+
         cardElement.innerHTML = `
-            <img src="${item.imageUrl}" alt="${item.name}" onerror="this.src='https://placehold.co/100x100?text=Food'">
-            <div class="food-info">
-                <div class="food-title">${item.name}</div>
-                <div class="food-expiry">Expires: ${visualFormattedDisplay} (${dynamicCountdownMsg})</div>
+            <button class="delete-item-button" type="button" aria-label="Remove ${escapeHtml(item.name)} from pantry">&times;</button>
+            <div class="food-card-summary">
+                <img src="${item.imageUrl}" alt="${item.name}" onerror="this.src='https://placehold.co/100x100?text=Food'">
+                <div class="food-info">
+                    <div class="food-title">${escapeHtml(item.name)}</div>
+                    <div class="food-expiry">Expires: ${visualFormattedDisplay} (${dynamicCountdownMsg})</div>
+                </div>
+                <span class="eco-badge">Eco: ${uppercaseEcoGrading}</span>
             </div>
-            <span class="eco-badge">Eco: ${uppercaseEcoGrading}</span>
+            <div class="food-details">
+                <p><strong>Ingredients:</strong> ${ingredientsText}</p>
+                <p><strong>Allergens:</strong> ${allergensText}</p>
+            </div>
         `;
-        
+
+        // Toggle the expanded detail view whenever the card itself is clicked
+        cardElement.addEventListener('click', () => {
+            cardElement.classList.toggle('expanded');
+        });
+
+        // Deleting an item shouldn't also toggle the expanded view underneath it
+        cardElement.querySelector('.delete-item-button').addEventListener('click', (event) => {
+            event.stopPropagation();
+            handleDeleteItem(item.id, item.name);
+        });
+
         pantryListContainer.appendChild(cardElement);
     });
 }
 
+// Removes a single pantry item by id and refreshes the list
+function handleDeleteItem(itemId, itemName) {
+    const confirmed = confirm(`Remove ${itemName} from your pantry?`);
+
+    if (!confirmed) return;
+
+    const remainingItems = loadPantry().filter(item => item.id !== itemId);
+    localStorage.setItem("pantryItems", JSON.stringify(remainingItems));
+
+    renderPantryUI();
+}
+
+// Escapes text pulled from external API responses before it's inserted via innerHTML
+function escapeHtml(rawText) {
+    const div = document.createElement('div');
+    div.textContent = rawText;
+    return div.innerHTML;
+}
+
 function getDemoFallback(barcode) {
     const PRESENTATION_CHEAT_SHEET = {
-        "012000000133": { name: "Diet Pepsi Can", ecoScore: "d", imageUrl: "https://images.openfoodfacts.org/images/products/001/200/000/0133/front_en.142.400.jpg" },
-        "041500000251": { name: "Heinz Tomato Ketchup", ecoScore: "b", imageUrl: "https://images.openfoodfacts.org/images/products/004/150/000/0251/front_en.67.400.jpg" },
-        "078742371946": { name: "Organic Whole Milk", ecoScore: "c", imageUrl: "https://images.openfoodfacts.org/images/products/007/874/237/1946/front_en.45.400.jpg" }
+        "012000000133": { name: "Diet Pepsi Can", ecoScore: "d", imageUrl: "https://images.openfoodfacts.org/images/products/001/200/000/0133/front_en.142.400.jpg", ingredients: "Carbonated water, caramel color, aspartame, phosphoric acid, potassium benzoate, caffeine, natural flavor, citric acid.", allergens: "None listed" },
+        "041500000251": { name: "Heinz Tomato Ketchup", ecoScore: "b", imageUrl: "https://images.openfoodfacts.org/images/products/004/150/000/0251/front_en.67.400.jpg", ingredients: "Tomato concentrate, distilled vinegar, high fructose corn syrup, salt, spice, onion powder, natural flavoring.", allergens: "None listed" },
+        "078742371946": { name: "Organic Whole Milk", ecoScore: "c", imageUrl: "https://images.openfoodfacts.org/images/products/007/874/237/1946/front_en.45.400.jpg", ingredients: "Grade A organic whole milk, vitamin D3.", allergens: "Milk" }
     };
     return PRESENTATION_CHEAT_SHEET[barcode] || { 
         name: `Eco Item #${barcode.slice(-4)}`, 
         ecoScore: "a", 
-        imageUrl: "https://placehold.co/100x100?text=Eco+Food" 
+        imageUrl: "https://placehold.co/100x100?text=Eco+Food",
+        ingredients: "No ingredient data available for this demo item.",
+        allergens: "No allergen data available for this demo item."
     };
 }
