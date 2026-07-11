@@ -1,0 +1,12 @@
+.header-container{
+    background-color: rgba(107, 176, 36);
+    display:flex;
+}
+.header-container #logo{
+    height: 10rem;
+    width: 10rem;
+    background-image: url(images/FATE_logo-title.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
