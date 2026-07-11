@@ -1,12 +1,67 @@
-.header-container{
+*{
+    margin: 0;
+    padding: 0;
+    border: none;
+    box-sizing: border-box;
+    outline: none;
+    text-decoration: none;
+    text-transform: capitalize;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    transition: all .25s ease-in-out;
+    font-family: var(--text_font);
+    list-style: none;
+}
+html{
+    font-size: 62.5%; /*This is like a universal constant for 1px*/                                                                                             
+}
+main{
+    margin: 0 1rem; /* Reduced from 6rem to fit phone screens */
+    margin-bottom: 6rem;
+}
+body{
+    height: fit-content;
+    background-color: white;
+}
+
+.header-container{ /*Container for the logo*/
     background-color: rgba(107, 176, 36);
     display:flex;
+    align-items: center;
+    justify-content: center;
+    height: 15rem;
 }
-.header-container #logo{
+.header-container #logo{ /*Controlls the main logo of the website*/
     height: 10rem;
     width: 10rem;
     background-image: url(images/FATE_logo-title.png);
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
+    border-radius: 35%;
 }
+.header-container #logo:hover{ /*Controlls the main logo of the website*/
+    transform: scale(1.2);
+}
+#name-container{
+    height: 7rem;
+    background-color: rgba(22, 82, 40);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#name-container #costumer-name{
+    font-size: 3.5rem;
+    letter-spacing: .1rem;
+    color: whitesmoke;
+}
+.section_divider{
+    display: flex;
+    justify-content: center;
+}
+.section_divider hr{
+    border-top: .5rem double gold; /* Gives it color and thickness */
+    width: 100%; /*Mmakes it look cleaner than edge-to-edge */
+}
+
+
+/*------------------------------------------------------ Footer ------------------------------------------------------*/
