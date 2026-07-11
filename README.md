@@ -1,4 +1,3 @@
 # F.A.T.E.
 
-
-This is a test commit
+Im going to add fake foods to data/ for testing purposes until we have a system setup
