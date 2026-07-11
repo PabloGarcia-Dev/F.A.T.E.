@@ -12,7 +12,7 @@
     text-decoration: none;
     text-transform: capitalize;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
-    transition: all .25s ease-in-out;
+    transition: all .2s ease-in-out;
     font-family: var(--text_font);
     list-style: none;
 }
@@ -21,7 +21,7 @@ html{
 }
 main{
     margin: 0 1rem; /* Reduced from 6rem to fit phone screens */
-    margin-bottom: 12rem; /* Increased to prevent content from hiding behind the fixed footer */
+    margin-bottom: 14rem; /* Safe padding so content scrolls completely clear of the footer */
 }
 body{
     height: fit-content;
@@ -68,70 +68,6 @@ body{
     width: 100%; /*Mmakes it look cleaner than edge-to-edge */
 }
 
-/*------------------------------------------------------ Bottom Nav & Footer Layout ------------------------------------------------------*/
-.footer-container{
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 9rem;
-    background-color: var(--main-color); /* Changes background to the main brand green */
-    border-top: 1rem solid var(--secondary-color);
-    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
-    z-index: 999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-bottom: env(safe-area-inset-bottom);
-}
-
-.bottom-nav{
-    width: 100%;
-    max-width: 500px;
-    display: flex;
-    justify-content: center; /* Centers the scan wrapper perfectly */
-    align-items: center;
-}
-
-/*------------------------------------------------------ Camera Scan Button ------------------------------------------------------*/
-.scan-button-wrapper{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: whitesmoke;
-    border: .2rem solid var(--tertiary-color);
-    border-radius: 50%;
-    height: 8rem;
-    width: 8rem;
-    margin-bottom: 9rem;
-}
-.scan-button-wrapper:hover{
-    transform: scale(1.05);
-}
-.green-bar{
-    height: 1rem;
-    background-color: red;
-}
-.scan-button-wrapper #start-scan-button{
-    font-size: 5.5rem; 
-}
-
-/* Interaction States */
-.scan-action-circle:active {
-    transform: scale(0.92);
-    background-color: #f7fafc;
-}
-
-.scan-label{
-    font-size: 1.4rem;
-    font-weight: 900;
-    color: #ffffff; /* Flipped to white to stand out sharply against the green footer background */
-    margin-top: 0.6rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05rem;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Gives it a slight readability pop */
-}
-
 /*------------------------------------------------------ Layout & App Containers ------------------------------------------------------*/
 #app-container {
     max-width: 50rem;
@@ -160,6 +96,7 @@ body{
 .section-title {
     font-size: 2.2rem;
     color: var(--secondary-color);
+    margin-bottom: 1.5rem;
 }
 
 .pantry-placeholder {
@@ -210,4 +147,70 @@ body{
     padding: 0.2rem 0.6rem;
     border-radius: 4px;
     font-weight: bold;
+}
+
+/*------------------------------------------------------ Bottom Nav & Footer Layout ------------------------------------------------------*/
+.footer-container{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 8rem;
+    background-color: var(--main-color); 
+    border-top: 0.6rem solid var(--secondary-color);
+    box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.15);
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+.bottom-nav{
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    position: relative;
+}
+
+/*------------------------------------------------------ Floating Camera Scan Button ------------------------------------------------------*/
+.scan-button-wrapper{
+    position: absolute;
+    bottom: -1rem; /* Aligns smoothly relative to the container frame */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.scan-action-button {
+    background-color: whitesmoke;
+    border: 0.3rem solid var(--tertiary-color);
+    border-radius: 50%;
+    height: 8.5rem;
+    width: 8.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+}
+
+/* Smooth Icon Size Calibration */
+.scan-action-button i {
+    font-size: 4rem;
+    color: var(--secondary-color);
+}
+
+/* Hover and Tap Interaction Feedback */
+.scan-action-button:hover {
+    transform: translateY(-0.4rem) scale(1.04);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.3);
+}
+
+.scan-action-button:active {
+    transform: translateY(-0.1rem) scale(0.95);
+    background-color: #e2e8f0;
 }
