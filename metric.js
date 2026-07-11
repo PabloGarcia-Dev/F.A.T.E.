@@ -1,5 +1,9 @@
-/* Calculate days remaining until expiration */
+/* Calculate days remaining until expiration. Returns null when there is no expiry date set. */
 export function getDaysLeft(expiryDate) {
+  if (!expiryDate) {
+    return null;
+  }
+
   const today = new Date();
   const expiry = new Date(`${expiryDate}T00:00:00`);
 
@@ -16,6 +20,10 @@ export function getTotalItems(items) {
 /* Return an expiration category for styling */
 export function getExpirationStatus(expiryDate) {
   const daysLeft = getDaysLeft(expiryDate);
+
+  if (daysLeft === null) {
+    return "none";
+  }
 
   if (daysLeft < 0) {
     return "expired";
@@ -40,6 +48,10 @@ export function getExpirationStatus(expiryDate) {
 export function getExpirationMessage(expiryDate) {
   const daysLeft = getDaysLeft(expiryDate);
 
+  if (daysLeft === null) {
+    return "No expiration date";
+  }
+
   if (daysLeft < 0) {
     return `Expired ${Math.abs(daysLeft)} days ago`;
   }
@@ -55,9 +67,21 @@ export function getExpirationMessage(expiryDate) {
   return `${daysLeft} days left`;
 }
 
-/* Return items sorted from closest expiration to furthest */
+/* Return items sorted from closest expiration to furthest. Items with no expiry date sort last. */
 export function getItemsSortedByExpiry(items) {
   return [...items].sort((firstItem, secondItem) => {
+    if (!firstItem.expiryDate && !secondItem.expiryDate) {
+      return 0;
+    }
+
+    if (!firstItem.expiryDate) {
+      return 1;
+    }
+
+    if (!secondItem.expiryDate) {
+      return -1;
+    }
+
     return (
       new Date(firstItem.expiryDate) -
       new Date(secondItem.expiryDate)
@@ -68,7 +92,8 @@ export function getItemsSortedByExpiry(items) {
 /* Return the number of expired items */
 export function getExpiredCount(items) {
   return items.filter((item) => {
-    return getDaysLeft(item.expiryDate) < 0;
+    const daysLeft = getDaysLeft(item.expiryDate);
+    return daysLeft !== null && daysLeft < 0;
   }).length;
 }
 
@@ -77,7 +102,7 @@ export function getExpiringSoonCount(items, numberOfDays = 3) {
   return items.filter((item) => {
     const daysLeft = getDaysLeft(item.expiryDate);
 
-    return daysLeft >= 0 && daysLeft <= numberOfDays;
+    return daysLeft !== null && daysLeft >= 0 && daysLeft <= numberOfDays;
   }).length;
 }
 

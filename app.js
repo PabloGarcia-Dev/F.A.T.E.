@@ -41,28 +41,33 @@ async function handleProcessedBarcode(barcode) {
     }
 
     const ISOStringToday = new Date().toISOString().split('T')[0];
-    const userSelectedExpiry = prompt(`Scanned: ${dataPayload.name}\nEnter Expiration Date (YYYY-MM-DD):`, ISOStringToday);
+    const userSelectedExpiry = prompt(`Scanned: ${dataPayload.name}\nEnter Expiration Date (YYYY-MM-DD), or leave blank for no expiration date:`, ISOStringToday);
 
-    if (userSelectedExpiry) {
-        const itemRecord = {
-            id: 'item_' + Date.now() + '_' + barcode,
-            barcode: barcode,
-            name: dataPayload.name,
-            imageUrl: dataPayload.imageUrl,
-            ecoScore: dataPayload.ecoScore,
-            ingredients: dataPayload.ingredients || 'No ingredient data available',
-            allergens: dataPayload.allergens || 'No allergen data available',
-            expiryDate: userSelectedExpiry
-        };
-
-        // Access team array storage routines
-        let activeItems = loadPantry();
-        activeItems.push(itemRecord);
-        localStorage.setItem("pantryItems", JSON.stringify(activeItems));
-
-        // Sync view mapping updates
-        renderPantryUI();
+    // Only a real Cancel should abandon the scan; a blank field just means "no expiration date"
+    if (userSelectedExpiry === null) {
+        return;
     }
+
+    const trimmedExpiry = userSelectedExpiry.trim();
+
+    const itemRecord = {
+        id: 'item_' + Date.now() + '_' + barcode,
+        barcode: barcode,
+        name: dataPayload.name,
+        imageUrl: dataPayload.imageUrl,
+        ecoScore: dataPayload.ecoScore,
+        ingredients: dataPayload.ingredients || 'No ingredient data available',
+        allergens: dataPayload.allergens || 'No allergen data available',
+        expiryDate: trimmedExpiry === '' ? null : trimmedExpiry
+    };
+
+    // Access team array storage routines
+    let activeItems = loadPantry();
+    activeItems.push(itemRecord);
+    localStorage.setItem("pantryItems", JSON.stringify(activeItems));
+
+    // Sync view mapping updates
+    renderPantryUI();
 }
 
 function renderPantryUI() {
@@ -92,8 +97,12 @@ function renderPantryUI() {
             cardElement.style.borderLeftColor = 'gold';
         }
 
-        const dateBlocks = item.expiryDate.split('-');
-        const visualFormattedDisplay = dateBlocks.length === 3 ? `${dateBlocks[1]}/${dateBlocks[2]}/${dateBlocks[0].slice(-2)}` : item.expiryDate;
+        const dateBlocks = item.expiryDate ? item.expiryDate.split('-') : null;
+        const visualFormattedDisplay = dateBlocks && dateBlocks.length === 3 ? `${dateBlocks[1]}/${dateBlocks[2]}/${dateBlocks[0].slice(-2)}` : item.expiryDate;
+
+        const expiryLine = item.expiryDate
+            ? `Expires: ${visualFormattedDisplay} (${dynamicCountdownMsg})`
+            : dynamicCountdownMsg;
 
         const ingredientsText = escapeHtml(item.ingredients || 'No ingredient data available');
         const allergensText = escapeHtml(item.allergens || 'No allergen data available');
@@ -104,7 +113,7 @@ function renderPantryUI() {
                 <img src="${item.imageUrl}" alt="${item.name}" onerror="this.src='https://placehold.co/100x100?text=Food'">
                 <div class="food-info">
                     <div class="food-title">${escapeHtml(item.name)}</div>
-                    <div class="food-expiry">Expires: ${visualFormattedDisplay} (${dynamicCountdownMsg})</div>
+                    <div class="food-expiry">${expiryLine}</div>
                 </div>
                 <span class="eco-badge">Eco: ${uppercaseEcoGrading}</span>
             </div>
