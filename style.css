@@ -101,6 +101,10 @@ body {
     gap: 0.8rem;
 }
 
+#recipe-results {
+    white-space: pre-line;
+}
+
 input {
     min-width: 0;
     min-height: 4.8rem;
