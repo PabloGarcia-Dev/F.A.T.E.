@@ -1,9 +1,12 @@
-:root{
+:root {
     --main-color: rgba(107, 176, 36);
     --secondary-color: rgba(22, 82, 40);
     --tertiary-color: gold;
+    --dark-green: #17332d;
+    --light-bg: #f3f7f3;
 }
-*{
+
+* {
     margin: 0;
     padding: 0;
     border: none;
@@ -13,29 +16,29 @@
     text-transform: capitalize;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     transition: all .2s ease-in-out;
-    font-family: var(--text_font);
     list-style: none;
 }
-html{
-    font-size: 62.5%; /*This is like a universal constant for 1px*/                                                                                             
-}
-main{
-    margin: 0 1rem; /* Reduced from 6rem to fit phone screens */
-    margin-bottom: 14rem; /* Safe padding so content scrolls completely clear of the footer */
-}
-body{
-    height: fit-content;
-    background-color: white;
+
+html {
+    font-size: 62.5%;
 }
 
-.header-container{ /*Container for the logo*/
+body {
+    min-height: 100vh;
+    background-color: var(--light-bg);
+    color: var(--dark-green);
+}
+
+/* ------------------ Branding Header Context ------------------ */
+.header-container {
     background-color: var(--main-color);
-    display:flex;
+    display: flex;
     align-items: center;
     justify-content: center;
     height: 15rem;
 }
-.header-container #logo{ /*Controlls the main logo of the website*/
+
+.header-container #logo {
     height: 10rem;
     width: 10rem;
     background-image: url(images/FATE_logo-title.png);
@@ -44,61 +47,99 @@ body{
     background-size: cover;
     border-radius: 35%;
 }
-.header-container #logo:hover{ /*Controlls the main logo of the website*/
-    transform: scale(1.2);
-}
-#name-container{
+
+#name-container {
     height: 7rem;
     background-color: var(--secondary-color);
     display: flex;
     align-items: center;
     justify-content: center;
 }
-#name-container #costumer-name{
+
+#name-container #costumer-name {
     font-size: 3.5rem;
     letter-spacing: .1rem;
     color: whitesmoke;
 }
-.section_divider{
+
+.section_divider {
     display: flex;
     justify-content: center;
 }
-.section_divider hr{
-    border-top: .5rem double var(--tertiary-color); /* Gives it color and thickness */
-    width: 100%; /*Mmakes it look cleaner than edge-to-edge */
+
+.section_divider hr {
+    border-top: .5rem double var(--tertiary-color);
+    width: 100%;
 }
 
-/*------------------------------------------------------ Layout & App Containers ------------------------------------------------------*/
+/* ------------------ Base Structural Framework ------------------ */
 #app-container {
     max-width: 50rem;
     margin: 2rem auto;
     padding: 0 1.5rem;
+    margin-bottom: 14rem; /* Keeps content clear of bottom footer */
 }
 
-.scanner-section {
-    margin-bottom: 3rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.manual-entry-card {
+    background: #ffffff;
+    border: 1px solid #dce8e1;
+    border-radius: 14px;
+    padding: 2rem;
+    margin-bottom: 2.5rem;
+    box-shadow: 0 4px 12px rgba(23, 63, 53, 0.05);
 }
 
-/* Style the target camera box wrapper */
-#scanner-reader {
-    width: 100%;
-    max-width: 350px;
-    background: #f0f0f0;
-    border-radius: 12px;
-    overflow: hidden;
-    margin-bottom: 1.5rem;
-}
-
-/*------------------------------------------------------ Pantry List Cards ------------------------------------------------------*/
 .section-title {
     font-size: 2.2rem;
     color: var(--secondary-color);
     margin-bottom: 1.5rem;
 }
 
+/* ------------------ Input Form Styling Controls ------------------ */
+.manual-controls {
+    display: flex;
+    gap: 0.8rem;
+}
+
+input {
+    min-width: 0;
+    min-height: 4.8rem;
+    flex: 1;
+    border: 1px solid #afc2bb;
+    border-radius: 12px;
+    padding: 0.7rem 1.2rem;
+    font-size: 1.6rem;
+}
+
+input:focus {
+    border-color: var(--secondary-color);
+}
+
+.manual-controls button {
+    min-height: 4.8rem;
+    border-radius: 12px;
+    padding: 0 1.8rem;
+    font-size: 1.4rem;
+    font-weight: 700;
+    cursor: pointer;
+    color: #173f35;
+    background: #d9eee5;
+}
+
+.field-error {
+    color: #a12b2b;
+    font-size: 1.3rem;
+    margin-top: 0.5rem;
+    min-height: 1.5rem;
+}
+
+.barcode-result {
+    font-size: 1.4rem;
+    margin-top: 1rem;
+    font-weight: 700;
+}
+
+/* ------------------ Pantry Dashboard View Engine ------------------ */
 .pantry-placeholder {
     font-size: 1.6rem;
     color: #777;
@@ -106,51 +147,51 @@ body{
     padding: 3rem 0;
 }
 
-.food-card{
+.food-card {
     display: flex;
     align-items: center;
-    background: #fafafa;
+    background: #ffffff;
     border-left: 0.6rem solid var(--main-color);
     padding: 1.2rem;
-    border-radius: 6px;
-    margin-bottom: 1rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    border-radius: 8px;
+    margin-bottom: 1.2rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
 }
 
-.food-card img{
+.food-card img {
     width: 5rem;
     height: 5rem;
     object-fit: contain;
     margin-right: 1.5rem;
 }
 
-.food-info{
+.food-info {
     flex-grow: 1;
 }
 
-.food-title{
+.food-title {
     font-size: 1.6rem;
     font-weight: bold;
     color: #333;
 }
 
-.food-expiry{
+.food-expiry {
     font-size: 1.3rem;
     color: #666;
     margin-top: 0.2rem;
 }
 
-.eco-badge{
+.eco-badge {
     background-color: var(--secondary-color);
     color: white;
     font-size: 1.1rem;
-    padding: 0.2rem 0.6rem;
+    padding: 0.4rem 0.8rem;
     border-radius: 4px;
     font-weight: bold;
 }
 
-/*------------------------------------------------------ Bottom Nav & Footer Layout ------------------------------------------------------*/
-.footer-container{
+/* ------------------ Nav Bar Sticky Footer Layout ------------------ */
+.footer-container {
     position: fixed;
     bottom: 0;
     left: 0;
@@ -166,7 +207,7 @@ body{
     padding-bottom: env(safe-area-inset-bottom);
 }
 
-.bottom-nav{
+.bottom-nav {
     width: 100%;
     max-width: 500px;
     display: flex;
@@ -175,10 +216,9 @@ body{
     position: relative;
 }
 
-/*------------------------------------------------------ Floating Camera Scan Button ------------------------------------------------------*/
-.scan-button-wrapper{
+.scan-button-wrapper {
     position: absolute;
-    bottom: -1rem; /* Aligns smoothly relative to the container frame */
+    bottom: -1rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -198,19 +238,100 @@ body{
     box-shadow: 0 4px 10px rgba(0,0,0,0.25);
 }
 
-/* Smooth Icon Size Calibration */
 .scan-action-button i {
     font-size: 4rem;
     color: var(--secondary-color);
 }
 
-/* Hover and Tap Interaction Feedback */
-.scan-action-button:hover {
-    transform: translateY(-0.4rem) scale(1.04);
-    box-shadow: 0 6px 14px rgba(0,0,0,0.3);
+.scan-action-button:active {
+    transform: scale(0.95);
+    background-color: #e2e8f0;
 }
 
-.scan-action-button:active {
-    transform: translateY(-0.1rem) scale(0.95);
-    background-color: #e2e8f0;
+/* ------------------ Video Scanner Overlay Modal ------------------ */
+.hidden { display: none !important; }
+body.scanner-open { overflow: hidden; }
+
+.scanner-modal {
+    position: fixed;
+    z-index: 1000;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: rgba(5, 18, 14, 0.85);
+    padding: 1rem;
+}
+
+.scanner-container {
+    width: min(100%, 42rem);
+    border-radius: 18px;
+    padding: 1.5rem;
+    background: #ffffff;
+    box-shadow: 0 24px 70px rgba(0,0,0,0.4);
+}
+
+.scanner-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.2rem;
+}
+
+.scanner-header h2 {
+    font-size: 1.8rem;
+    color: var(--secondary-color);
+}
+
+.close-button {
+    background: #edf2ef;
+    color: var(--dark-green);
+    padding: 0.6rem 1.2rem;
+    font-size: 1.3rem;
+    border-radius: 8px;
+}
+
+.video-frame {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    border-radius: 14px;
+    aspect-ratio: 4 / 3;
+    background: #0a0f0d;
+}
+
+#scanner-video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.scan-guide {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80%;
+    height: 35%;
+    border: 3px solid #b9ff78;
+    border-radius: 12px;
+    box-shadow: 0 0 0 999px rgba(0, 0, 0, 0.3);
+    transform: translate(-50%, -50%);
+}
+
+.scan-guide::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 5%;
+    right: 5%;
+    height: 2px;
+    background: #b9ff78;
+    box-shadow: 0 0 8px #b9ff78;
+}
+
+.scanner-status {
+    font-size: 1.4rem;
+    margin-top: 1.2rem;
+    color: #4c615a;
+    text-align: center;
 }

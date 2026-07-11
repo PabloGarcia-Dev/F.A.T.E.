@@ -5,6 +5,7 @@ const SELECTORS = {
   modal: "#scanner-modal",
   video: "#scanner-video",
   status: "#scanner-status",
+  scanButton: "#start-scan-button", // Maps to your floating footer camera button precisely
   manualInput: "#manual-barcode-input",
   manualError: "#manual-barcode-error",
 };
