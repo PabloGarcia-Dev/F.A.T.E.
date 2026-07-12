@@ -1,0 +1,8 @@
+[build]
+  functions = "netlify/functions"
+  publish = "."
+
+[[redirects]]
+  from = "/api/gemini-recipes"
+  to = "/.netlify/functions/gemini-recipes"
+  status = 200

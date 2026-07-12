@@ -101,14 +101,38 @@ async function handleGenerateRecipes() {
     }
 }
 
-// Replace this function inside your recipes.js file to ensure Netlify works without a server backend
+// Calls the Netlify function at /api/gemini-recipes, which talks to the real Gemini API
+// server-side (keeping the API key out of the browser). Falls back to a templated
+// local recipe if the network call fails, so a demo never dead-ends on a flaky connection.
 async function fetchRecipesFromGemini(pantryContext) {
     console.log("Analyzing Pantry Context for Recipe Matching:", pantryContext);
-    
-    // Simulate a brief network delay for UX/presentation realism
-    await new Promise(resolve => setTimeout(resolve, 1200));
 
-    // Fallback collection if no items are expiring soon
+    try {
+        const response = await fetch(RECIPE_API_ENDPOINT, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(pantryContext),
+        });
+
+        if (!response.ok) {
+            throw new Error(`Recipe endpoint returned ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (!Array.isArray(data.recipes)) {
+            throw new Error("Recipe endpoint returned an unexpected shape");
+        }
+
+        return data.recipes;
+    } catch (error) {
+        console.error("Falling back to offline recipe generator:", error);
+        return buildOfflineFallbackRecipes(pantryContext);
+    }
+}
+
+// Local, no-network fallback so the demo still works if the API/network is unavailable
+function buildOfflineFallbackRecipes(pantryContext) {
     if (!pantryContext.expiringItems || pantryContext.expiringItems.length === 0) {
         return [
             {
@@ -123,12 +147,10 @@ async function fetchRecipesFromGemini(pantryContext) {
         ];
     }
 
-    // Capture the name of whatever item is expiring first to base the dynamic recipe around
     const primaryTargetName = pantryContext.expiringItems[0].name;
     const secondaryItems = pantryContext.otherItems.map(i => i.name).slice(0, 2);
     const combinedUsedItems = [primaryTargetName, ...secondaryItems];
 
-    // Dynamically spin up realistic recipe card variants matching your exact scanned objects
     return [
         {
             title: `Zero-Waste ${primaryTargetName} Skillet`,
