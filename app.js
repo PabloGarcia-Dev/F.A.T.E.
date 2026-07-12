@@ -1,12 +1,29 @@
 // Change from relative folder strings to local flat files
-import { startScanner, stopScanner, submitManualBarcode } from "./scanner.js";
-import { apiData } from "./foodApi.js";
-import { getExpirationStatus, getExpirationMessage, getItemsSortedByExpiry } from "./metric.js";
-import { loadPantry, savePantry } from "./pantry.js";
-import { initRecipePanel } from "./recipes.js";
+import {
+    startScanner,
+    stopScanner,
+    submitManualBarcode
+} from "./scanner.js";
 
+import { apiData } from "./foodApi.js";
+
+import {
+    getExpirationStatus,
+    getExpirationMessage,
+    getItemsSortedByExpiry,
+    getItemsWithDaysLeft
+} from "./metric.js";
+
+import {
+    loadPantry,
+    savePantry
+} from "./pantry.js";
 const outputText = document.querySelector("#barcode-result");
 const pantryListContainer = document.querySelector("#pantry-list");
+const generateRecipesButton = document.querySelector("#generate-recipes-button");
+const recipeStatus = document.querySelector("#recipe-status");
+const recipeResults = document.querySelector("#recipe-results");
+
 
 // Initialize application visual array states on runtime spin up
 document.addEventListener("DOMContentLoaded", () => {
@@ -27,6 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelector("#manual-barcode-input").addEventListener("keydown", (event) => {
         if (event.key === "Enter") submitManualBarcode(handleProcessedBarcode);
     });
+    generateRecipesButton.addEventListener("click", generateRecipePlan);
 });
 
 // Central callback handling ingestions across both input points
@@ -70,6 +88,41 @@ async function handleProcessedBarcode(barcode) {
 
     // Sync view mapping updates
     renderPantryUI();
+}
+
+function generateRecipePlan() {
+    const pantryItems = loadPantry();
+
+    const expiringItems = getItemsWithDaysLeft(pantryItems)
+        .filter((item) => {
+            return (
+                item.expiryDate !== null &&
+                item.daysLeft >= 0 &&
+                item.daysLeft <= 5
+            );
+        })
+        .sort((firstItem, secondItem) => {
+            return firstItem.daysLeft - secondItem.daysLeft;
+        });
+
+    if (expiringItems.length === 0) {
+        recipeStatus.textContent =
+            "No foods are expiring within the next five days.";
+
+        recipeResults.textContent = "";
+        return;
+    }
+
+    recipeStatus.textContent =
+        `${expiringItems.length} expiring food items found.`;
+
+    recipeResults.textContent = expiringItems
+        .map((item) => {
+            return `${item.name}: ${item.daysLeft} days left`;
+        })
+        .join("\n");
+
+    console.log("Foods being sent to Gemini:", expiringItems);
 }
 
 function renderPantryUI() {
