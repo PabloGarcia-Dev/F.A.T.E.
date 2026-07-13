@@ -364,7 +364,7 @@ body.scanner-open { overflow: hidden; }
     overflow: hidden;
     width: 100%;
     border-radius: 14px;
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 16 / 10;
     background: #0a0f0d;
 }
 
@@ -379,8 +379,8 @@ body.scanner-open { overflow: hidden; }
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 80%;
-    height: 35%;
+    width: 92%;
+    height: 55%;
     border: 3px solid #b9ff78;
     border-radius: 12px;
     box-shadow: 0 0 0 999px rgba(0, 0, 0, 0.3);

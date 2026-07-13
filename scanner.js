@@ -138,7 +138,27 @@ export async function startScanner(onBarcodeDetected) {
     // Ignore an async start that finished after the user cancelled.
     if (currentSession !== scanSession) return;
 
-    codeReader = new ZXingBrowser.BrowserMultiFormatReader(undefined, {
+    // Restrict decoding to grocery barcode formats only. Scanning every format
+    // ZXing supports (QR, PDF417, Data Matrix, Aztec, etc.) on every frame slows
+    // down each attempt for no benefit here, since none of those ever appear on
+    // grocery packaging. Narrowing the format list speeds up detection and cuts
+    // down on false negatives caused by wasted decode attempts.
+    // NOTE: deliberately NOT using DecodeHintType.TRY_HARDER — it has a known bug
+    // that silently freezes continuous video decoding in @zxing/browser.
+    // https://github.com/zxing-js/browser/issues/74
+    let hints;
+    if (ZXingBrowser.DecodeHintType && ZXingBrowser.BarcodeFormat) {
+      hints = new Map();
+      hints.set(ZXingBrowser.DecodeHintType.POSSIBLE_FORMATS, [
+        ZXingBrowser.BarcodeFormat.EAN_13,
+        ZXingBrowser.BarcodeFormat.EAN_8,
+        ZXingBrowser.BarcodeFormat.UPC_A,
+        ZXingBrowser.BarcodeFormat.UPC_E,
+        ZXingBrowser.BarcodeFormat.CODE_128,
+      ]);
+    }
+
+    codeReader = new ZXingBrowser.BrowserMultiFormatReader(hints, {
       delayBetweenScanAttempts: 150,
       delayBetweenScanSuccess: 1000,
     });
@@ -150,8 +170,15 @@ export async function startScanner(onBarcodeDetected) {
         audio: false,
         video: {
           facingMode: { ideal: "environment" },
-          width: { ideal: 1280 },
-          height: { ideal: 720 },
+          // Barcodes need pixel detail more than frame rate — pushing
+          // resolution higher gives the decoder more to work with,
+          // especially on smaller or worn labels.
+          width: { ideal: 1920 },
+          height: { ideal: 1080 },
+          // Ask for continuous autofocus where supported, so the camera
+          // keeps refocusing on a close-up object instead of settling on
+          // a fixed/slow focus that never quite locks onto the barcode.
+          advanced: [{ focusMode: "continuous" }],
         },
       },
       video,
