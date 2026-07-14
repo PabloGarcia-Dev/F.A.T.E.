@@ -16,6 +16,49 @@ let libraryPromise = null;
 let scanSession = 0;
 let resultHandled = false;
 
+function getVideoTrack(video) {
+  const stream = video?.srcObject;
+  if (!(stream instanceof MediaStream)) return null;
+  return stream.getVideoTracks()[0] || null;
+}
+
+/** Applies continuous autofocus on the live track where the browser supports it. */
+async function applyContinuousFocus(video) {
+  const track = getVideoTrack(video);
+  if (!track || typeof track.getCapabilities !== "function") return;
+
+  try {
+    const capabilities = track.getCapabilities();
+    console.log("Camera track capabilities:", capabilities);
+
+    if (capabilities.focusMode?.includes("continuous")) {
+      await track.applyConstraints({ advanced: [{ focusMode: "continuous" }] });
+    } else {
+      console.log("This camera/browser does not report support for programmatic focus control.");
+    }
+  } catch (error) {
+    console.warn("Could not apply continuous focus:", error);
+  }
+}
+
+/** Nudges the camera to refocus once — useful as a manual fallback where
+ * continuous autofocus isn't supported or has locked onto the wrong distance. */
+async function triggerSingleShotFocus(video) {
+  const track = getVideoTrack(video);
+  if (!track || typeof track.getCapabilities !== "function") return;
+
+  try {
+    const capabilities = track.getCapabilities();
+
+    if (capabilities.focusMode?.includes("single-shot")) {
+      await track.applyConstraints({ advanced: [{ focusMode: "single-shot" }] });
+      setStatus("Refocusing…");
+    }
+  } catch (error) {
+    console.warn("Could not trigger single-shot focus:", error);
+  }
+}
+
 function getElement(selector) {
   return document.querySelector(selector);
 }
@@ -121,6 +164,8 @@ export async function startScanner(onBarcodeDetected) {
     throw new Error("Scanner UI is missing #scanner-video.");
   }
 
+  video.addEventListener("click", handleVideoTap);
+
   showModal();
   setStatus("Starting camera…");
 
@@ -208,6 +253,15 @@ export async function startScanner(onBarcodeDetected) {
     }
 
     scannerControls = controls;
+
+    // Some browsers silently ignore focusMode when it's passed as part of the
+    // initial getUserMedia constraints. Re-applying it directly on the live
+    // track is more reliable where the browser supports it at all.
+    // NOTE: this only works on browsers that expose focus control at all —
+    // notably Chrome on Android. iOS Safari does not support programmatic
+    // focus control (no ImageCapture / focusMode support), so this is a
+    // best-effort improvement, not a guarantee across all devices.
+    applyContinuousFocus(video);
   } catch (error) {
     if (currentSession !== scanSession) return;
 
@@ -219,6 +273,11 @@ export async function startScanner(onBarcodeDetected) {
       : cameraErrorMessage(error);
     setStatus(message, "error");
   }
+}
+
+function handleVideoTap() {
+  const video = getElement(SELECTORS.video);
+  if (video) triggerSingleShotFocus(video);
 }
 
 function stopCameraTracks() {
@@ -237,6 +296,7 @@ function stopCameraTracks() {
   if (video) {
     video.pause();
     video.srcObject = null;
+    video.removeEventListener("click", handleVideoTap);
   }
 
   codeReader = null;

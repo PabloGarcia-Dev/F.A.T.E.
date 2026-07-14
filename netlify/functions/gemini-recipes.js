@@ -1,7 +1,12 @@
 // Netlify Function: /api/gemini-recipes (see netlify.toml redirect)
 // Runs server-side so the Gemini API key is never exposed to the browser.
 
-const GEMINI_MODEL = "gemini-2.5-flash";
+// Using the "latest" alias instead of a pinned dated model (e.g. gemini-2.5-flash)
+// on purpose: Google can retire a specific pinned model without much warning
+// (that's exactly what just happened here), but "latest" auto-updates to
+// whatever the current best Flash model is, with 2 weeks' notice by email
+// before it ever changes underneath you.
+const GEMINI_MODEL = "gemini-flash-latest";
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
 export default async (req) => {
